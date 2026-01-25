@@ -1,0 +1,24 @@
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace BgutuGrades.Models.Group
+{
+    public class GetGroupsByDisciplineRequest
+    {
+        [Required]
+        public int DisciplineId { get; set; }
+    }
+
+    public class CreateGroupRequest
+    {
+        [Required]
+        public string? Name { get; set; }
+        [Required]
+        public int Code { get; set; }
+        [Required]
+        public DateOnly StudyStartDate { get; set; }
+        [Required]
+        public DateOnly StudyEndDate { get; set; }
+        [Required]
+        public int StartWeekNumber { get; set; }
+    }
+}

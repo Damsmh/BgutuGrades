@@ -18,12 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\Class\" />
-    <Folder Include="Models\Discipline\" />
-    <Folder Include="Models\Group\" />
-    <Folder Include="Models\Mark\" />
     <Folder Include="Models\Presence\" />
-    <Folder Include="Models\Student\" />
     <Folder Include="Models\Transfer\" />
     <Folder Include="Models\Work\" />
     <Folder Include="Repositories\" />
