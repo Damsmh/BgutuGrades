@@ -363,3 +363,4 @@ MigrationBackup/
 FodyWeavers.xsd
 /Grades/appsettings.json
 /BgutuGrades/appsettings.json
+/BgutuGrades/appsettings.Production.json
