@@ -7,4 +7,28 @@ namespace BgutuGrades.Models.Student
         [Required]
         public int GroupId { get; set; }
     }
+
+    public class CreateStudentRequest
+    {
+        [Required]
+        public string? Name { get; set; }
+        [Required]
+        public int GroupId { get; set; }
+    }
+
+    public class UpdateStudentRequest
+    {
+        [Required]
+        public int Id { get; set; }
+        [Required]
+        public string? Name { get; set; }
+        [Required]
+        public int GroupId { get; set; }
+    }
+
+    public class DeleteStudentRequest
+    {
+        [Required]
+        public int Id { get; set; }
+    }
 }

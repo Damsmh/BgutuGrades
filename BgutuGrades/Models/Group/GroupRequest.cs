@@ -21,4 +21,26 @@ namespace BgutuGrades.Models.Group
         [Required]
         public int StartWeekNumber { get; set; }
     }
+
+    public class UpdateGroupRequest
+    {
+        [Required]
+        public int Id { get; set; }
+        [Required]
+        public string? Name { get; set; }
+        [Required]
+        public int Code { get; set; }
+        [Required]
+        public DateOnly StudyStartDate { get; set; }
+        [Required]
+        public DateOnly StudyEndDate { get; set; }
+        [Required]
+        public int StartWeekNumber { get; set; }
+    }
+
+    public class DeleteGroupRequest
+    {
+        [Required]
+        public int Id { get; set; }
+    }
 }
