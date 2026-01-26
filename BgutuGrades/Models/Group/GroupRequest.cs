@@ -2,6 +2,11 @@
 
 namespace BgutuGrades.Models.Group
 {
+    public class GetGroupByIdRequest
+    {
+        [Required]
+        public int Id { get; set; }
+    }
     public class GetGroupsByDisciplineRequest
     {
         [Required]
@@ -11,9 +16,7 @@ namespace BgutuGrades.Models.Group
     public class CreateGroupRequest
     {
         [Required]
-        public string? Name { get; set; }
-        [Required]
-        public int Code { get; set; }
+        public string Name { get; set; }
         [Required]
         public DateOnly StudyStartDate { get; set; }
         [Required]
@@ -27,9 +30,7 @@ namespace BgutuGrades.Models.Group
         [Required]
         public int Id { get; set; }
         [Required]
-        public string? Name { get; set; }
-        [Required]
-        public int Code { get; set; }
+        public string Name { get; set; }
         [Required]
         public DateOnly StudyStartDate { get; set; }
         [Required]

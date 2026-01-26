@@ -1,7 +1,19 @@
-﻿namespace BgutuGrades.Mapping
-{
-    public class ClassProfile
-    {
+﻿using AutoMapper;
+using BgutuGrades.DTO;
+using BgutuGrades.Entities;
+using BgutuGrades.Models.Class;
 
+namespace BgutuGrades.Mapping
+{
+    public class ClassProfile : Profile
+    {
+        public ClassProfile()
+        {
+            CreateMap<CreateClassRequest, Class>();
+
+            CreateMap<Class, ClassDTO>();
+
+            CreateMap<ClassDTO, ClassResponse>();
+        }
     }
 }

@@ -2,6 +2,10 @@
 
 namespace BgutuGrades.Models.Student
 {
+    public class NotFoundResponse
+    {
+        public int Id { get; set; }
+    }
     public class GetStudentsByGroupRequest
     {
         [Required]

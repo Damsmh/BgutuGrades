@@ -1,8 +1,9 @@
 ﻿using BgutuGrades.Entities;
 using Grades.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace Grades.Data
+namespace BgutuGrades.Data
 {
     public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
     {
@@ -14,5 +15,15 @@ namespace Grades.Data
         public DbSet<Student> Students { get; set; }
         public DbSet<Work> Works { get; set; }
         public DbSet<Transfer> Transfers { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Class>()
+                .Property(u => u.Type)
+                .HasConversion(new EnumToStringConverter<ClassType>());
+            modelBuilder.Entity<Presence>()
+                .Property(u => u.IsPresent)
+                .HasConversion(new EnumToStringConverter<PresenceType>());
+        }
     }
 }

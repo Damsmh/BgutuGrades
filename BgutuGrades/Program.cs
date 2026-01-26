@@ -1,6 +1,10 @@
 
-using Grades.Data;
+using BgutuGrades.Data;
+using BgutuGrades.Mapping;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OpenApi;
+using Scalar.AspNetCore;
 
 namespace BgutuGrades
 {
@@ -10,9 +14,10 @@ namespace BgutuGrades
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            builder.Services.AddDbContext<AppDbContext>(options =>
+                options.UseNpgsql(
+                    builder.Configuration.GetConnectionString("PostgreSQL")));
 
-            builder.Services.AddControllers();
-            builder.Services.AddOpenApi();
             builder.Services.AddCors(options =>
             {
                 options.AddDefaultPolicy(
@@ -23,22 +28,32 @@ namespace BgutuGrades
                                .AllowAnyHeader();
                     });
             });
-            builder.Services.AddDbContext<AppDbContext>(options =>
-                options.UseNpgsql(
-                    builder.Configuration.GetConnectionString("DefaultConnection")));
+            
+            builder.Services.AddSignalR();
+            builder.Services.AddAutoMapper(cfg => { }, typeof(Program).Assembly);
+            builder.Services.AddControllers();
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "BGITU GRADES API", Version = "v1" });
+                c.DescribeAllParametersInCamelCase();
+            });
             var app = builder.Build();
 
-            if (app.Environment.IsDevelopment())
-            {
-                app.MapOpenApi();
-            }
+            app.UseSwagger();
+            app.MapSwagger();
 
             app.UseHttpsRedirection();
-
             app.UseAuthorization();
 
-
             app.MapControllers();
+
+            app.MapScalarApiReference("", options =>
+            {
+                options.WithTitle("FakeObsidian API")
+                        .WithTheme(ScalarTheme.Purple)
+                        .WithOpenApiRoutePattern("/swagger/v1/swagger.json");
+            });
 
             app.Run();
         }
