@@ -24,6 +24,22 @@ namespace BgutuGrades.Models.Mark
         public int WorkId { get; set; }
     }
 
+    public class UpdateMarkRequest
+    {
+        [Required]
+        public int Id { get; set; }
+        [Required]
+        public DateOnly Date { get; set; }
+        [Required]
+        public string? Value { get; set; }
+        [Required]
+        public bool IsOverdue { get; set; }
+        [Required]
+        public int StudentId { get; set; }
+        [Required]
+        public int WorkId { get; set; }
+    }
+
     public class DeleteMarkByStudentAndWorkRequest
     {
         [Required]

@@ -27,10 +27,4 @@ namespace BgutuGrades.Models.Transfer
         [Required]
         public int GroupId { get; set; }
     }
-
-    public class DeleteTransferRequest
-    {
-        [Required]
-        public int Id { get; set; }
-    }
 }

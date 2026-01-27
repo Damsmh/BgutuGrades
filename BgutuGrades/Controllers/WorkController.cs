@@ -1,0 +1,65 @@
+﻿using BgutuGrades.Models.Student;
+using BgutuGrades.Models.Work;
+using BgutuGrades.Services;
+using Microsoft.AspNetCore.Mvc;
+
+namespace BgutuGrades.Controllers
+{
+    [Route("api/work")]
+    [ApiController]
+    public class WorkController(IWorkService WorkService) : ControllerBase
+    {
+        private readonly IWorkService _WorkService = WorkService;
+
+        [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<WorkResponse>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<WorkResponse>>> GetWorks()
+        {
+            var works = await _WorkService.GetAllWorksAsync();
+            return Ok(works);
+        }
+
+        [HttpPost]
+        [ProducesResponseType(typeof(WorkResponse), StatusCodes.Status201Created)]
+        public async Task<ActionResult<WorkResponse>> CreateWork([FromBody] CreateWorkRequest request)
+        {
+            var work = await _WorkService.CreateWorkAsync(request);
+            return CreatedAtAction(nameof(GetWork), new { id = work.Id }, work);
+        }
+
+        [HttpGet("{id}")]
+        [ProducesResponseType(typeof(WorkResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<WorkResponse>> GetWork([FromRoute] int id)
+        {
+            var work = await _WorkService.GetWorkByIdAsync(id);
+            if (work == null)
+                return NotFound(id);
+            return Ok(work);
+        }
+
+        [HttpPut]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> UpdateWork([FromBody] UpdateWorkRequest request)
+        {
+            var success = await _WorkService.UpdateWorkAsync(request);
+            if (!success)
+                return NotFound(request.Id);
+
+            return NoContent();
+        }
+
+        [HttpDelete]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> DeleteWork([FromQuery] DeleteWorkRequest request)
+        {
+            var success = await _WorkService.DeleteWorkAsync(request.Id);
+            if (!success)
+                return NotFound(request.Id);
+
+            return NoContent();
+        }
+    }
+}

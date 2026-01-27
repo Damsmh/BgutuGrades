@@ -1,7 +1,5 @@
 using BgutuGrades.Data;
-using BgutuGrades.Mapping;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi;
 using Scalar.AspNetCore;
 

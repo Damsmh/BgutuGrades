@@ -1,0 +1,65 @@
+﻿using BgutuGrades.Models.Transfer;
+using BgutuGrades.Models.Student;
+using BgutuGrades.Services;
+using Microsoft.AspNetCore.Mvc;
+
+namespace BgutuGrades.Controllers
+{
+    [Route("api/transfer")]
+    [ApiController]
+    public class TransferController(ITransferService TransferService) : ControllerBase
+    {
+        private readonly ITransferService _TransferService = TransferService;
+
+        [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<TransferResponse>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<TransferResponse>>> GetTransfers()
+        {
+            var transfers = await _TransferService.GetAllTransfersAsync();
+            return Ok(transfers);
+        }
+
+        [HttpPost]
+        [ProducesResponseType(typeof(TransferResponse), StatusCodes.Status201Created)]
+        public async Task<ActionResult<TransferResponse>> CreateTransfer([FromBody] CreateTransferRequest request)
+        {
+            var transfer = await _TransferService.CreateTransferAsync(request);
+            return CreatedAtAction(nameof(GetTransfer), new { id = transfer.Id }, transfer);
+        }
+
+        [HttpGet("{id}")]
+        [ProducesResponseType(typeof(TransferResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<TransferResponse>> GetTransfer([FromRoute] int id)
+        {
+            var transfer = await _TransferService.GetTransferByIdAsync(id);
+            if (transfer == null)
+                return NotFound(id);
+            return Ok(transfer);
+        }
+
+        [HttpPut]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(UpdateTransferRequest), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> UpdateTransfer([FromBody] UpdateTransferRequest request)
+        {
+            var success = await _TransferService.UpdateTransferAsync(request);
+            if (!success)
+                return NotFound(request.Id);
+
+            return NoContent();
+        }
+
+        [HttpDelete]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> DeleteTransfer([FromQuery] int id)
+        {
+            var success = await _TransferService.DeleteTransferAsync(id);
+            if (!success)
+                return NotFound(id);
+
+            return NoContent();
+        }
+    }
+}

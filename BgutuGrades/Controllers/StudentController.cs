@@ -1,6 +1,7 @@
 ﻿using BgutuGrades.Models.Student;
 using BgutuGrades.Services;
 using Microsoft.AspNetCore.Mvc;
+using Scalar.AspNetCore;
 
 
 namespace BgutuGrades.Controllers
@@ -11,11 +12,11 @@ namespace BgutuGrades.Controllers
     {
         private readonly IStudentService _studentService = studentService;
 
-        [HttpGet]
+        [HttpGet("by_gId")]
         [ProducesResponseType(typeof(IEnumerable<StudentResponse>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<StudentResponse>>> GetStudents()
+        public async Task<ActionResult<IEnumerable<StudentResponse>>> GetStudents([FromQuery] GetStudentsByGroupRequest request)
         {
-            var students = await _studentService.GetAllStudentsAsync();
+            var students = await _studentService.GetStudentsByGroupAsync(request);
             return Ok(students);
         }
 

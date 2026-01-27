@@ -5,6 +5,7 @@ namespace BgutuGrades.Services
     public interface IStudentService
     {
         Task<IEnumerable<StudentResponse>> GetAllStudentsAsync();
+        Task<IEnumerable<StudentResponse>> GetStudentsByGroupAsync(GetStudentsByGroupRequest request);
         Task<StudentResponse> CreateStudentAsync(CreateStudentRequest request);
         Task<StudentResponse?> GetStudentByIdAsync(int id);
         Task<bool> UpdateStudentAsync(UpdateStudentRequest request);
@@ -28,6 +29,11 @@ namespace BgutuGrades.Services
         }
 
         public Task<StudentResponse?> GetStudentByIdAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<StudentResponse>> GetStudentsByGroupAsync(GetStudentsByGroupRequest request)
         {
             throw new NotImplementedException();
         }
