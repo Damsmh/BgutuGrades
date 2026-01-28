@@ -9,13 +9,13 @@ namespace BgutuGrades.Controllers
     [ApiController]
     public class TransferController(ITransferService TransferService) : ControllerBase
     {
-        private readonly ITransferService _TransferService = TransferService;
+        private readonly ITransferService _transferService = TransferService;
 
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<TransferResponse>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<TransferResponse>>> GetTransfers()
         {
-            var transfers = await _TransferService.GetAllTransfersAsync();
+            var transfers = await _transferService.GetAllTransfersAsync();
             return Ok(transfers);
         }
 
@@ -23,7 +23,7 @@ namespace BgutuGrades.Controllers
         [ProducesResponseType(typeof(TransferResponse), StatusCodes.Status201Created)]
         public async Task<ActionResult<TransferResponse>> CreateTransfer([FromBody] CreateTransferRequest request)
         {
-            var transfer = await _TransferService.CreateTransferAsync(request);
+            var transfer = await _transferService.CreateTransferAsync(request);
             return CreatedAtAction(nameof(GetTransfer), new { id = transfer.Id }, transfer);
         }
 
@@ -32,7 +32,7 @@ namespace BgutuGrades.Controllers
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<TransferResponse>> GetTransfer([FromRoute] int id)
         {
-            var transfer = await _TransferService.GetTransferByIdAsync(id);
+            var transfer = await _transferService.GetTransferByIdAsync(id);
             if (transfer == null)
                 return NotFound(id);
             return Ok(transfer);
@@ -43,7 +43,7 @@ namespace BgutuGrades.Controllers
         [ProducesResponseType(typeof(UpdateTransferRequest), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateTransfer([FromBody] UpdateTransferRequest request)
         {
-            var success = await _TransferService.UpdateTransferAsync(request);
+            var success = await _transferService.UpdateTransferAsync(request);
             if (!success)
                 return NotFound(request.Id);
 
@@ -55,7 +55,7 @@ namespace BgutuGrades.Controllers
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteTransfer([FromQuery] int id)
         {
-            var success = await _TransferService.DeleteTransferAsync(id);
+            var success = await _transferService.DeleteTransferAsync(id);
             if (!success)
                 return NotFound(id);
 

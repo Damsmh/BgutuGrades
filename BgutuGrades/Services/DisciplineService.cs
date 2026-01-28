@@ -1,4 +1,7 @@
-﻿using BgutuGrades.Models.Discipline;
+﻿using AutoMapper;
+using BgutuGrades.Models.Discipline;
+using BgutuGrades.Repositories;
+using Grades.Entities;
 
 namespace BgutuGrades.Services
 {
@@ -10,31 +13,40 @@ namespace BgutuGrades.Services
         Task<bool> UpdateDisciplineAsync(UpdateDisciplineRequest request);
         Task<bool> DeleteDisciplineAsync(int id);
     }
-    public class DisciplineService : IDisciplineService
+    public class DisciplineService(IDisciplineRepository disciplineRepository, IMapper mapper) : IDisciplineService
     {
-        public Task<DisciplineResponse> CreateDisciplineAsync(CreateDisciplineRequest request)
+        private readonly IDisciplineRepository _disciplineRepository = disciplineRepository;
+        private readonly IMapper _mapper = mapper;
+
+        public async Task<DisciplineResponse> CreateDisciplineAsync(CreateDisciplineRequest request)
         {
-            throw new NotImplementedException();
+            var entity = _mapper.Map<Discipline>(request);
+            var createdEntity = await _disciplineRepository.CreateDisciplineAsync(entity);
+            return _mapper.Map<DisciplineResponse>(createdEntity);
         }
 
-        public Task<bool> DeleteDisciplineAsync(int id)
+        public async Task<bool> DeleteDisciplineAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _disciplineRepository.DeleteDisciplineAsync(id);
         }
 
-        public Task<IEnumerable<DisciplineResponse>> GetAllDisciplinesAsync()
+        public async Task<IEnumerable<DisciplineResponse>> GetAllDisciplinesAsync()
         {
-            throw new NotImplementedException();
+            var entities = await _disciplineRepository.GetAllAsync();
+            return _mapper.Map<IEnumerable<DisciplineResponse>>(entities);
         }
 
-        public Task<DisciplineResponse?> GetDisciplineByIdAsync(int id)
+        public async Task<DisciplineResponse?> GetDisciplineByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            var entity = await _disciplineRepository.GetByIdAsync(id);
+            return entity == null ? null : _mapper.Map<DisciplineResponse>(entity);
         }
 
-        public Task<bool> UpdateDisciplineAsync(UpdateDisciplineRequest request)
+        public async Task<bool> UpdateDisciplineAsync(UpdateDisciplineRequest request)
         {
-            throw new NotImplementedException();
+            var entity = _mapper.Map<Discipline>(request);
+            return await _disciplineRepository.UpdateDisciplineAsync(entity);
         }
     }
+
 }

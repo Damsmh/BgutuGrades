@@ -1,4 +1,7 @@
-﻿using BgutuGrades.Models.Student;
+﻿using AutoMapper;
+using BgutuGrades.Models.Student;
+using BgutuGrades.Repositories;
+using Grades.Entities;
 
 namespace BgutuGrades.Services
 {
@@ -11,36 +14,46 @@ namespace BgutuGrades.Services
         Task<bool> UpdateStudentAsync(UpdateStudentRequest request);
         Task<bool> DeleteStudentAsync(int id);
     }
-    public class StudentService : IStudentService
+    public class StudentService(IStudentRepository studentRepository, IMapper mapper) : IStudentService
     {
-        public Task<StudentResponse> CreateStudentAsync(CreateStudentRequest request)
+        private readonly IStudentRepository _studentRepository = studentRepository;
+        private readonly IMapper _mapper = mapper;
+
+        public async Task<StudentResponse> CreateStudentAsync(CreateStudentRequest request)
         {
-            throw new NotImplementedException();
+            var entity = _mapper.Map<Student>(request);
+            var createdEntity = await _studentRepository.CreateStudentAsync(entity);
+            return _mapper.Map<StudentResponse>(createdEntity);
         }
 
-        public Task<bool> DeleteStudentAsync(int id)
+        public async Task<bool> DeleteStudentAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _studentRepository.DeleteStudentAsync(id);
         }
 
-        public Task<IEnumerable<StudentResponse>> GetAllStudentsAsync()
+        public async Task<IEnumerable<StudentResponse>> GetAllStudentsAsync()
         {
-            throw new NotImplementedException();
+            var entities = await _studentRepository.GetAllStudentsAsync();
+            return _mapper.Map<IEnumerable<StudentResponse>>(entities);
         }
 
-        public Task<StudentResponse?> GetStudentByIdAsync(int id)
+        public async Task<StudentResponse?> GetStudentByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            var entity = await _studentRepository.GetByIdAsync(id);
+            return entity == null ? null : _mapper.Map<StudentResponse>(entity);
         }
 
-        public Task<IEnumerable<StudentResponse>> GetStudentsByGroupAsync(GetStudentsByGroupRequest request)
+        public async Task<IEnumerable<StudentResponse>> GetStudentsByGroupAsync(GetStudentsByGroupRequest request)
         {
-            throw new NotImplementedException();
+            var entities = await _studentRepository.GetStudentsByGroupAsync(request.GroupId);
+            return _mapper.Map<IEnumerable<StudentResponse>>(entities);
         }
 
-        public Task<bool> UpdateStudentAsync(UpdateStudentRequest request)
+        public async Task<bool> UpdateStudentAsync(UpdateStudentRequest request)
         {
-            throw new NotImplementedException();
+            var entity = _mapper.Map<Student>(request);
+            return await _studentRepository.UpdateStudentAsync(entity);
         }
     }
+
 }

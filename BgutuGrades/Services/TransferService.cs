@@ -1,4 +1,7 @@
-﻿using BgutuGrades.Models.Transfer;
+﻿using AutoMapper;
+using BgutuGrades.Models.Transfer;
+using BgutuGrades.Repositories;
+using Grades.Entities;
 
 namespace BgutuGrades.Services
 {
@@ -10,31 +13,39 @@ namespace BgutuGrades.Services
         Task<bool> UpdateTransferAsync(UpdateTransferRequest request);
         Task<bool> DeleteTransferAsync(int id);
     }
-    public class TransferService : ITransferService
+    public class TransferService(ITransferRepository transferRepository, IMapper mapper) : ITransferService
     {
-        public Task<TransferResponse> CreateTransferAsync(CreateTransferRequest request)
+        private readonly ITransferRepository _transferRepository = transferRepository;
+        private readonly IMapper _mapper = mapper;
+
+        public async Task<TransferResponse> CreateTransferAsync(CreateTransferRequest request)
         {
-            throw new NotImplementedException();
+            var entity = _mapper.Map<Transfer>(request);
+            var createdEntity = await _transferRepository.CreateTransferAsync(entity);
+            return _mapper.Map<TransferResponse>(createdEntity);
         }
 
-        public Task<bool> DeleteTransferAsync(int id)
+        public async Task<bool> DeleteTransferAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _transferRepository.DeleteTransferAsync(id);
         }
 
-        public Task<IEnumerable<TransferResponse>> GetAllTransfersAsync()
+        public async Task<TransferResponse?> GetTransferByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            var entity = await _transferRepository.GetByIdAsync(id);
+            return entity == null ? null : _mapper.Map<TransferResponse>(entity);
         }
 
-        public Task<TransferResponse?> GetTransferByIdAsync(int id)
+        public async Task<IEnumerable<TransferResponse>> GetAllTransfersAsync()
         {
-            throw new NotImplementedException();
+            var entities = await _transferRepository.GetAllTransfersAsync();
+            return _mapper.Map<IEnumerable<TransferResponse>>(entities);
         }
 
-        public Task<bool> UpdateTransferAsync(UpdateTransferRequest request)
+        public async Task<bool> UpdateTransferAsync(UpdateTransferRequest request)
         {
-            throw new NotImplementedException();
+            var entity = _mapper.Map<Transfer>(request);
+            return await _transferRepository.UpdateTransferAsync(entity);
         }
     }
 }

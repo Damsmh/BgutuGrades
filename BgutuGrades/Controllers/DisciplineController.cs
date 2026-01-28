@@ -9,13 +9,13 @@ namespace BgutuGrades.Controllers
     [ApiController]
     public class DisciplineController(IDisciplineService DisciplineService) : ControllerBase
     {
-        private readonly IDisciplineService _DisciplineService = DisciplineService;
+        private readonly IDisciplineService _disciplineService = DisciplineService;
 
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<DisciplineResponse>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<DisciplineResponse>>> GetDisciplines()
         {
-            var Disciplines = await _DisciplineService.GetAllDisciplinesAsync();
+            var Disciplines = await _disciplineService.GetAllDisciplinesAsync();
             return Ok(Disciplines);
         }
 
@@ -23,7 +23,7 @@ namespace BgutuGrades.Controllers
         [ProducesResponseType(typeof(DisciplineResponse), StatusCodes.Status201Created)]
         public async Task<ActionResult<DisciplineResponse>> CreateDiscipline([FromBody] CreateDisciplineRequest request)
         {
-            var Discipline = await _DisciplineService.CreateDisciplineAsync(request);
+            var Discipline = await _disciplineService.CreateDisciplineAsync(request);
             return CreatedAtAction(nameof(GetDiscipline), new { id = Discipline.Id }, Discipline);
         }
 
@@ -32,7 +32,7 @@ namespace BgutuGrades.Controllers
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<DisciplineResponse>> GetDiscipline([FromRoute] int id)
         {
-            var Discipline = await _DisciplineService.GetDisciplineByIdAsync(id);
+            var Discipline = await _disciplineService.GetDisciplineByIdAsync(id);
             if (Discipline == null)
                 return NotFound(id);
             return Ok(Discipline);
@@ -43,7 +43,7 @@ namespace BgutuGrades.Controllers
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateDiscipline([FromBody] UpdateDisciplineRequest request)
         {
-            var success = await _DisciplineService.UpdateDisciplineAsync(request);
+            var success = await _disciplineService.UpdateDisciplineAsync(request);
             if (!success)
                 return NotFound(request.Id);
 
@@ -55,7 +55,7 @@ namespace BgutuGrades.Controllers
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteDiscipline([FromQuery] DeleteDisciplineRequest request)
         {
-            var success = await _DisciplineService.DeleteDisciplineAsync(request.Id);
+            var success = await _disciplineService.DeleteDisciplineAsync(request.Id);
             if (!success)
                 return NotFound(request.Id);
 

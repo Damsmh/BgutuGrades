@@ -1,6 +1,7 @@
 ﻿using BgutuGrades.Models.Class;
 using BgutuGrades.Models.Student;
 using BgutuGrades.Services;
+using Grades.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BgutuGrades.Controllers
@@ -9,22 +10,21 @@ namespace BgutuGrades.Controllers
     [ApiController]
     public class ClassController(IClassService ClassService) : ControllerBase
     {
-        private readonly IClassService _ClassService = ClassService;
+        private readonly IClassService _classService = ClassService;
 
-        [HttpGet("by_dId_gId")]
-        [ProducesResponseType(typeof(IEnumerable<ClassResponse>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<ClassResponse>>> GetClasss(
-            [FromQuery] GetClassesByDisciplineAndGroupRequest request)
+        [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<ClassDateResponse>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<ClassDateResponse>>> GetClasssDates([FromBody] GetClassDateRequest request)
         {
-            var classs = await _ClassService.GetClassesByDisciplineAndGroupAsync(request);
-            return Ok(classs);
+            var classDates = await _classService.GetClassDatesAsync(request);
+            return Ok(classDates);
         }
 
         [HttpPost]
         [ProducesResponseType(typeof(ClassResponse), StatusCodes.Status201Created)]
         public async Task<ActionResult<ClassResponse>> CreateClass([FromBody] CreateClassRequest request)
         {
-            var _class = await _ClassService.CreateClassAsync(request);
+            var _class = await _classService.CreateClassAsync(request);
             return CreatedAtAction(nameof(GetClass), new { id = _class.Id }, _class);
         }
 
@@ -33,7 +33,7 @@ namespace BgutuGrades.Controllers
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<ClassResponse>> GetClass([FromRoute] int id)
         {
-            var _class = await _ClassService.GetClassByIdAsync(id);
+            var _class = await _classService.GetClassByIdAsync(id);
             if (_class == null)
                 return NotFound(id);
             return Ok(_class);
@@ -44,7 +44,7 @@ namespace BgutuGrades.Controllers
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteClass([FromQuery] int id)
         {
-            var success = await _ClassService.DeleteClassAsync(id);
+            var success = await _classService.DeleteClassAsync(id);
             if (!success)
                 return NotFound(id);
 

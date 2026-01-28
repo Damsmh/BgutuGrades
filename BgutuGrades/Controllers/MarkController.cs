@@ -9,13 +9,13 @@ namespace BgutuGrades.Controllers
     [ApiController]
     public class MarkController(IMarkService MarkService) : ControllerBase
     {
-        private readonly IMarkService _MarkService = MarkService;
+        private readonly IMarkService _markService = MarkService;
 
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<MarkResponse>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<MarkResponse>>> GetMarks()
         {
-            var Marks = await _MarkService.GetAllMarksAsync();
+            var Marks = await _markService.GetAllMarksAsync();
             return Ok(Marks);
         }
 
@@ -23,7 +23,7 @@ namespace BgutuGrades.Controllers
         [ProducesResponseType(typeof(MarkResponse), StatusCodes.Status201Created)]
         public async Task<ActionResult<MarkResponse>> CreateMark([FromBody] CreateMarkRequest request)
         {
-            var Mark = await _MarkService.CreateMarkAsync(request);
+            var Mark = await _markService.CreateMarkAsync(request);
             return CreatedAtAction(nameof(GetMarkByDisciplineAndGroup), new { id = Mark.Id }, Mark);
         }
 
@@ -32,7 +32,7 @@ namespace BgutuGrades.Controllers
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<MarkResponse>> GetMarkByDisciplineAndGroup([FromQuery] GetMarksByDisciplineAndGroupRequest request)
         {
-            var Mark = await _MarkService.GetMarksByDisciplineAndGroupAsync(request);
+            var Mark = await _markService.GetMarksByDisciplineAndGroupAsync(request);
             if (Mark == null)
                 return NotFound(new {disciplineId = request.DisciplineId, groupId = request.GroupId});
             return Ok(Mark);
@@ -43,7 +43,7 @@ namespace BgutuGrades.Controllers
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateMark([FromBody] UpdateMarkRequest request)
         {
-            var success = await _MarkService.UpdateMarkAsync(request);
+            var success = await _markService.UpdateMarkAsync(request);
             if (!success)
                 return NotFound(request.Id);
 
@@ -55,7 +55,7 @@ namespace BgutuGrades.Controllers
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteMark([FromQuery] DeleteMarkByStudentAndWorkRequest request)
         {
-            var success = await _MarkService.DeleteMarkByStudentAndWorkAsync(request);
+            var success = await _markService.DeleteMarkByStudentAndWorkAsync(request);
             if (!success)
                 return NotFound(request.WorkId);
 

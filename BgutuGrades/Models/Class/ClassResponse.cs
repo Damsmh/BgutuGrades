@@ -11,4 +11,10 @@ namespace BgutuGrades.Models.Class
         public int DisciplineId { get; set; }
         public int GroupId { get; set; }
     }
+
+    public class ClassDateResponse
+    {
+        public DateOnly Date { get; set; }
+        public ClassType ClassType { get; set; }
+    }
 }

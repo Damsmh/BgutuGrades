@@ -3,12 +3,14 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BgutuGrades.Models.Class
 {
-    public class GetClassesByDisciplineAndGroupRequest
+    public class GetClassDateRequest
     {
         [Required]
         public int DisciplineId { get; set; }
         [Required]
         public int GroupId { get; set; }
+        [Required]
+        public DateOnly EndDate { get; set; }
     }
 
     public class CreateClassRequest

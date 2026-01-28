@@ -1,4 +1,7 @@
-﻿using BgutuGrades.Models.Presence;
+﻿using AutoMapper;
+using BgutuGrades.Models.Presence;
+using BgutuGrades.Repositories;
+using Grades.Entities;
 
 namespace BgutuGrades.Services
 {
@@ -8,27 +11,42 @@ namespace BgutuGrades.Services
         Task<PresenceResponse> CreatePresenceAsync(CreatePresenceRequest request);
         Task<IEnumerable<PresenceResponse>> GetPresencesByDisciplineAndGroupAsync(GetPresenceByDisciplineAndGroupRequest request);
         Task<bool> DeletePresenceByStudentAndDateAsync(DeletePresenceByStudentAndDateRequest request);
+        Task<bool> UpdatePresenceAsync(UpdatePresenceRequest request);
     }
-    public class PresenceService : IPresenceService
+    public class PresenceService(IPresenceRepository presenceRepository, IMapper mapper) : IPresenceService
     {
-        public Task<PresenceResponse> CreatePresenceAsync(CreatePresenceRequest request)
+        private readonly IPresenceRepository _presenceRepository = presenceRepository;
+        private readonly IMapper _mapper = mapper;
+
+        public async Task<PresenceResponse> CreatePresenceAsync(CreatePresenceRequest request)
         {
-            throw new NotImplementedException();
+            var entity = _mapper.Map<Presence>(request);
+            var createdEntity = await _presenceRepository.CreatePresenceAsync(entity);
+            return _mapper.Map<PresenceResponse>(createdEntity);
         }
 
-        public Task<bool> DeletePresenceByStudentAndDateAsync(DeletePresenceByStudentAndDateRequest request)
+        public async Task<IEnumerable<PresenceResponse>> GetAllPresencesAsync()
         {
-            throw new NotImplementedException();
+            var entities = await _presenceRepository.GetAllPresencesAsync();
+            return _mapper.Map<IEnumerable<PresenceResponse>>(entities);
         }
 
-        public Task<IEnumerable<PresenceResponse>> GetAllPresencesAsync()
+        public async Task<IEnumerable<PresenceResponse>> GetPresencesByDisciplineAndGroupAsync(GetPresenceByDisciplineAndGroupRequest request)
         {
-            throw new NotImplementedException();
+            var entities = await _presenceRepository.GetPresencesByDisciplineAndGroupAsync(request.DisciplineId, request.GroupId);
+            return _mapper.Map<IEnumerable<PresenceResponse>>(entities);
         }
 
-        public Task<IEnumerable<PresenceResponse>> GetPresencesByDisciplineAndGroupAsync(GetPresenceByDisciplineAndGroupRequest request)
+        public async Task<bool> DeletePresenceByStudentAndDateAsync(DeletePresenceByStudentAndDateRequest request)
         {
-            throw new NotImplementedException();
+            return await _presenceRepository.DeletePresenceByStudentAndDateAsync(request.StudentId, request.Date);
+        }
+
+        public async Task<bool> UpdatePresenceAsync(UpdatePresenceRequest request)
+        {
+            var entity = _mapper.Map<Presence>(request);
+            return await _presenceRepository.UpdatePresenceAsync(entity);
         }
     }
+
 }

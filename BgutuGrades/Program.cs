@@ -2,6 +2,7 @@ using BgutuGrades.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi;
 using Scalar.AspNetCore;
+using System.Text.Json.Serialization;
 
 namespace BgutuGrades
 {
@@ -28,8 +29,13 @@ namespace BgutuGrades
             
             builder.Services.AddSignalR();
             builder.Services.AddAutoMapper(cfg => { }, typeof(Program).Assembly);
-            builder.Services.AddControllers();
+            builder.Services.AddControllers()
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                }); ;
             builder.Services.AddEndpointsApiExplorer();
+    
             builder.Services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "BGITU GRADES API", Version = "v1" });

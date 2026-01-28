@@ -11,4 +11,10 @@ namespace BgutuGrades.DTO
         public int DisciplineId { get; set; }
         public int GroupId { get; set; }
     }
+
+    public class ClassDateDTO {
+        public DateOnly Date { get; set; }
+        public ClassType ClassType { get; set; }
+    }
+
 }

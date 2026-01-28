@@ -1,4 +1,7 @@
-﻿using BgutuGrades.Models.Work;
+﻿using AutoMapper;
+using BgutuGrades.Models.Work;
+using BgutuGrades.Repositories;
+using Grades.Entities;
 
 namespace BgutuGrades.Services
 {
@@ -10,31 +13,40 @@ namespace BgutuGrades.Services
         Task<bool> UpdateWorkAsync(UpdateWorkRequest request);
         Task<bool> DeleteWorkAsync(int id);
     }
-    public class WorkService : IWorkService
+    public class WorkService(IWorkRepository workRepository, IMapper mapper) : IWorkService
     {
-        public Task<WorkResponse> CreateWorkAsync(CreateWorkRequest request)
+        private readonly IWorkRepository _workRepository = workRepository;
+        private readonly IMapper _mapper = mapper;
+
+        public async Task<WorkResponse> CreateWorkAsync(CreateWorkRequest request)
         {
-            throw new NotImplementedException();
+            var entity = _mapper.Map<Work>(request);
+            var createdEntity = await _workRepository.CreateWorkAsync(entity);
+            return _mapper.Map<WorkResponse>(createdEntity);
         }
 
-        public Task<bool> DeleteWorkAsync(int id)
+        public async Task<bool> DeleteWorkAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _workRepository.DeleteWorkAsync(id);
         }
 
-        public Task<IEnumerable<WorkResponse>> GetAllWorksAsync()
+        public async Task<WorkResponse?> GetWorkByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            var entity = await _workRepository.GetByIdAsync(id);
+            return entity == null ? null : _mapper.Map<WorkResponse>(entity);
         }
 
-        public Task<WorkResponse?> GetWorkByIdAsync(int id)
+        public async Task<IEnumerable<WorkResponse>> GetAllWorksAsync()
         {
-            throw new NotImplementedException();
+            var entities = await _workRepository.GetAllWorksAsync();
+            return _mapper.Map<IEnumerable<WorkResponse>>(entities);
         }
 
-        public Task<bool> UpdateWorkAsync(UpdateWorkRequest request)
+        public async Task<bool> UpdateWorkAsync(UpdateWorkRequest request)
         {
-            throw new NotImplementedException();
+            var entity = _mapper.Map<Work>(request);
+            return await _workRepository.UpdateWorkAsync(entity);
         }
     }
+
 }

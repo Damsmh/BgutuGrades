@@ -9,13 +9,13 @@ namespace BgutuGrades.Controllers
     [ApiController]
     public class WorkController(IWorkService WorkService) : ControllerBase
     {
-        private readonly IWorkService _WorkService = WorkService;
+        private readonly IWorkService _workService = WorkService;
 
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<WorkResponse>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<WorkResponse>>> GetWorks()
         {
-            var works = await _WorkService.GetAllWorksAsync();
+            var works = await _workService.GetAllWorksAsync();
             return Ok(works);
         }
 
@@ -23,7 +23,7 @@ namespace BgutuGrades.Controllers
         [ProducesResponseType(typeof(WorkResponse), StatusCodes.Status201Created)]
         public async Task<ActionResult<WorkResponse>> CreateWork([FromBody] CreateWorkRequest request)
         {
-            var work = await _WorkService.CreateWorkAsync(request);
+            var work = await _workService.CreateWorkAsync(request);
             return CreatedAtAction(nameof(GetWork), new { id = work.Id }, work);
         }
 
@@ -32,7 +32,7 @@ namespace BgutuGrades.Controllers
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<WorkResponse>> GetWork([FromRoute] int id)
         {
-            var work = await _WorkService.GetWorkByIdAsync(id);
+            var work = await _workService.GetWorkByIdAsync(id);
             if (work == null)
                 return NotFound(id);
             return Ok(work);
@@ -43,7 +43,7 @@ namespace BgutuGrades.Controllers
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateWork([FromBody] UpdateWorkRequest request)
         {
-            var success = await _WorkService.UpdateWorkAsync(request);
+            var success = await _workService.UpdateWorkAsync(request);
             if (!success)
                 return NotFound(request.Id);
 
@@ -55,7 +55,7 @@ namespace BgutuGrades.Controllers
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteWork([FromQuery] DeleteWorkRequest request)
         {
-            var success = await _WorkService.DeleteWorkAsync(request.Id);
+            var success = await _workService.DeleteWorkAsync(request.Id);
             if (!success)
                 return NotFound(request.Id);
 

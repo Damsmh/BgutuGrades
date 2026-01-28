@@ -1,4 +1,7 @@
-﻿using BgutuGrades.Models.Group;
+﻿using AutoMapper;
+using BgutuGrades.Models.Group;
+using BgutuGrades.Repositories;
+using Grades.Entities;
 
 namespace BgutuGrades.Services
 {
@@ -11,31 +14,40 @@ namespace BgutuGrades.Services
         Task<bool> DeleteGroupAsync(int id);
     }
 
-    public class GroupService : IGroupService
+    public class GroupService(IGroupRepository groupRepository, IMapper mapper) : IGroupService
     {
-        public Task<GroupResponse> CreateGroupAsync(CreateGroupRequest request)
+        private readonly IGroupRepository _groupRepository = groupRepository;
+        private readonly IMapper _mapper = mapper;
+
+        public async Task<GroupResponse> CreateGroupAsync(CreateGroupRequest request)
         {
-            throw new NotImplementedException();
+            var entity = _mapper.Map<Group>(request);
+            var createdEntity = await _groupRepository.CreateGroupAsync(entity);
+            return _mapper.Map<GroupResponse>(createdEntity);
         }
 
-        public Task<bool> DeleteGroupAsync(int id)
+        public async Task<bool> DeleteGroupAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _groupRepository.DeleteGroupAsync(id);
         }
 
-        public Task<GroupResponse?> GetGroupByIdAsync(int id)
+        public async Task<GroupResponse?> GetGroupByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            var entity = await _groupRepository.GetByIdAsync(id);
+            return entity == null ? null : _mapper.Map<GroupResponse>(entity);
         }
 
-        public Task<IEnumerable<GroupResponse>> GetGroupsByDisciplineAsync(int disciplineId)
+        public async Task<IEnumerable<GroupResponse>> GetGroupsByDisciplineAsync(int disciplineId)
         {
-            throw new NotImplementedException();
+            var entities = await _groupRepository.GetGroupsByDisciplineAsync(disciplineId);
+            return _mapper.Map<IEnumerable<GroupResponse>>(entities);
         }
 
-        public Task<bool> UpdateGroupAsync(UpdateGroupRequest request)
+        public async Task<bool> UpdateGroupAsync(UpdateGroupRequest request)
         {
-            throw new NotImplementedException();
+            var entity = _mapper.Map<Group>(request);
+            return await _groupRepository.UpdateGroupAsync(entity);
         }
     }
+
 }

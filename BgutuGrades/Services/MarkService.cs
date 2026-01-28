@@ -1,4 +1,7 @@
-﻿using BgutuGrades.Models.Mark;
+﻿using AutoMapper;
+using BgutuGrades.Models.Mark;
+using BgutuGrades.Repositories;
+using Grades.Entities;
 
 namespace BgutuGrades.Services
 {
@@ -10,31 +13,39 @@ namespace BgutuGrades.Services
         Task<bool> UpdateMarkAsync(UpdateMarkRequest request);
         Task<bool> DeleteMarkByStudentAndWorkAsync(DeleteMarkByStudentAndWorkRequest request);
     }
-    public class MarkService : IMarkService
+    public class MarkService(IMarkRepository markRepository, IMapper mapper) : IMarkService
     {
-        public Task<MarkResponse> CreateMarkAsync(CreateMarkRequest request)
+        private readonly IMarkRepository _markRepository = markRepository;
+        private readonly IMapper _mapper = mapper;
+
+        public async Task<MarkResponse> CreateMarkAsync(CreateMarkRequest request)
         {
-            throw new NotImplementedException();
+            var entity = _mapper.Map<Mark>(request);
+            var createdEntity = await _markRepository.CreateMarkAsync(entity);
+            return _mapper.Map<MarkResponse>(createdEntity);
         }
 
-        public Task<bool> DeleteMarkByStudentAndWorkAsync(DeleteMarkByStudentAndWorkRequest request)
+        public async Task<IEnumerable<MarkResponse>> GetAllMarksAsync()
         {
-            throw new NotImplementedException();
+            var entities = await _markRepository.GetAllMarksAsync();
+            return _mapper.Map<IEnumerable<MarkResponse>>(entities);
         }
 
-        public Task<IEnumerable<MarkResponse>> GetAllMarksAsync()
+        public async Task<IEnumerable<MarkResponse>> GetMarksByDisciplineAndGroupAsync(GetMarksByDisciplineAndGroupRequest request)
         {
-            throw new NotImplementedException();
+            var entities = await _markRepository.GetMarksByDisciplineAndGroupAsync(request.DisciplineId, request.GroupId);
+            return _mapper.Map<IEnumerable<MarkResponse>>(entities);
         }
 
-        public Task<IEnumerable<MarkResponse>> GetMarksByDisciplineAndGroupAsync(GetMarksByDisciplineAndGroupRequest request)
+        public async Task<bool> UpdateMarkAsync(UpdateMarkRequest request)
         {
-            throw new NotImplementedException();
+            var entity = _mapper.Map<Mark>(request);
+            return await _markRepository.UpdateMarkAsync(entity);
         }
 
-        public Task<bool> UpdateMarkAsync(UpdateMarkRequest request)
+        public async Task<bool> DeleteMarkByStudentAndWorkAsync(DeleteMarkByStudentAndWorkRequest request)
         {
-            throw new NotImplementedException();
+            return await _markRepository.DeleteMarkByStudentAndWorkAsync(request.StudentId, request.WorkId);
         }
     }
 }
