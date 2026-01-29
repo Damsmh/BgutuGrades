@@ -12,8 +12,8 @@
 
     public class GradeMarkResponse
     {
-        public int ClassId { get; set; }
-        public DateOnly Date { get; set; }
+        public int WorkId { get; set; }
+        public string Name { get; set; }
         public string? Value { get; set; }
     }
 }

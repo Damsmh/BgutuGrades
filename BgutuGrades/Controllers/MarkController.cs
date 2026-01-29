@@ -1,15 +1,20 @@
-﻿using BgutuGrades.Models.Mark;
+﻿using BgutuGrades.Data;
+using BgutuGrades.Models.Mark;
+using BgutuGrades.Models.Presence;
 using BgutuGrades.Models.Student;
 using BgutuGrades.Services;
+using Grades.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace BgutuGrades.Controllers
 {
     [Route("api/mark")]
     [ApiController]
-    public class MarkController(IMarkService MarkService) : ControllerBase
+    public class MarkController(IMarkService MarkService, AppDbContext dbContext) : ControllerBase
     {
         private readonly IMarkService _markService = MarkService;
+        private readonly AppDbContext _dbContext = dbContext;
 
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<MarkResponse>), StatusCodes.Status200OK)]
@@ -48,6 +53,37 @@ namespace BgutuGrades.Controllers
                 return NotFound(request.Id);
 
             return NoContent();
+        }
+
+        [HttpPut("grade")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<ActionResult<GradeMarkResponse>> UpdateMarkGrade([FromQuery] UpdateMarkGradeRequest request, [FromBody] UpdateMarkRequest mark)
+        {
+            var existing = await _dbContext.Marks
+                .FirstOrDefaultAsync(m => m.StudentId == request.StudentId && m.WorkId == mark.WorkId);
+
+            if (existing != null)
+            {
+                existing.Value = mark.Value;
+                existing.Date = mark.Date;
+                existing.IsOverdue = mark.IsOverdue;
+            }
+            else
+            {
+                _dbContext.Marks.Add(new Mark
+                {
+                    StudentId = request.StudentId,
+                    WorkId = mark.WorkId,
+                    Value = mark.Value,
+                    Date = mark.Date,
+                    IsOverdue = mark.IsOverdue
+                });
+            }
+
+            await _dbContext.SaveChangesAsync();
+
+            return NoContent();
+
         }
 
         [HttpDelete]

@@ -9,6 +9,7 @@ namespace BgutuGrades.Repositories
         Task<IEnumerable<Work>> GetAllWorksAsync();
         Task<Work> CreateWorkAsync(Work entity);
         Task<Work?> GetByIdAsync(int id);
+        Task<IEnumerable<Work>> GetByDisciplineAndGroupAsync(int disciplineId, int groupId);
         Task<bool> UpdateWorkAsync(Work entity);
         Task<bool> DeleteWorkAsync(int id);
         Task DeleteAllAsync();
@@ -44,6 +45,18 @@ namespace BgutuGrades.Repositories
             var entities = await _dbContext.Works
                 .AsNoTracking()
                 .ToListAsync();
+            return entities;
+        }
+
+        public async Task<IEnumerable<Work>> GetByDisciplineAndGroupAsync(int disciplineId, int groupId)
+        {
+            var entities = await _dbContext.Works
+                .Where(w => w.DisciplineId == disciplineId &&
+                            _dbContext.Classes.Any(c => c.DisciplineId == disciplineId &&
+                                                        c.GroupId == groupId))
+                .AsNoTracking()
+                .ToListAsync();
+
             return entities;
         }
 

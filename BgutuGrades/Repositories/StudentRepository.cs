@@ -12,7 +12,7 @@ namespace BgutuGrades.Repositories
     {
         Task<IEnumerable<Student>> GetAllStudentsAsync();
         Task<IEnumerable<Student>> GetStudentsByGroupAsync(int groupId);
-        Task<IEnumerable<FullGradeMarkResponse>> GetMarksGrade(IEnumerable<ClassDateResponse> scheduleDates, int groupId, int disciplineId);
+        Task<IEnumerable<FullGradeMarkResponse>> GetMarksGrade(IEnumerable<Work> works, int groupId, int disciplineId);
         Task<IEnumerable<FullGradePresenceResponse>> GetPresenseGrade(IEnumerable<ClassDateResponse> scheduleDates, int groupId, int disciplineId);
         Task<Student> CreateStudentAsync(Student entity);
         Task<Student?> GetByIdAsync(int id);
@@ -86,7 +86,7 @@ namespace BgutuGrades.Repositories
             return students;
         }
 
-        public async Task<IEnumerable<FullGradeMarkResponse>> GetMarksGrade(IEnumerable<ClassDateResponse> scheduleDates, int groupId, int disciplineId)
+        public async Task<IEnumerable<FullGradeMarkResponse>> GetMarksGrade(IEnumerable<Work> works, int groupId, int disciplineId)
         {
             var students = await _dbContext.Students
                 .Where(s => s.GroupId == groupId)
@@ -94,13 +94,12 @@ namespace BgutuGrades.Repositories
                 {
                     StudentId = s.Id,
                     Name = s.Name,
-                    Marks = scheduleDates.Select(date => new GradeMarkResponse
+                    Marks = works.Select(work => new GradeMarkResponse
                     {
-                        ClassId = date.Id,
-                        Date = date.Date,
+                        WorkId = work.Id,
+                        Name = work.Name,
                         Value = s.Marks
-                            .Where(m => m.Work.DisciplineId == disciplineId &&
-                                       m.Date == date.Date)
+                            .Where(m => m.Work.Id ==  work.Id)
                             .Select(m => m.Value)
                             .FirstOrDefault()
                     }).ToList()

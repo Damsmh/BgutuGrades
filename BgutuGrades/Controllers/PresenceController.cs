@@ -1,15 +1,20 @@
-﻿using BgutuGrades.Models.Presence;
+﻿using BgutuGrades.Data;
+using BgutuGrades.Models.Class;
+using BgutuGrades.Models.Presence;
 using BgutuGrades.Models.Student;
 using BgutuGrades.Services;
+using Grades.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace BgutuGrades.Controllers
 {
     [Route("api/presence")]
     [ApiController]
-    public class PresenceController(IPresenceService PresenceService) : ControllerBase
+    public class PresenceController(IPresenceService PresenceService, AppDbContext dbContext) : ControllerBase
     {
         private readonly IPresenceService _presenceService = PresenceService;
+        private readonly AppDbContext _dbContext = dbContext;
 
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<PresenceResponse>), StatusCodes.Status200OK)]
@@ -47,6 +52,33 @@ namespace BgutuGrades.Controllers
             if (!success)
                 return NotFound(request.Id);
 
+            return NoContent();
+        }
+
+        [HttpPut("grade")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<ActionResult<GradePresenceResponse>> UpdatePresenceGrade([FromQuery] UpdatePresenceGradeRequest request, [FromBody] UpdatePresenceRequest presence)
+        {
+            var existing = await _dbContext.Presences
+                .FirstOrDefaultAsync(p => p.DisciplineId == request.DisciplineId &&
+                                         p.StudentId == request.StudentId &&
+                                         p.Date == presence.Date);
+
+            if (existing != null)
+            {
+                existing.IsPresent = presence.IsPresent;
+            }
+            else
+            {
+                _dbContext.Presences.Add(new Presence
+                {
+                    DisciplineId = request.DisciplineId,
+                    StudentId = request.StudentId,
+                    Date = presence.Date,
+                    IsPresent = presence.IsPresent
+                });
+            }
+            //var response = new GradePresenceResponse { ClassId = request.ClassId, IsPresent = presence.IsPresent, Date = presence.Date };  для хаба
             return NoContent();
         }
 

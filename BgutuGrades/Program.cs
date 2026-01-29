@@ -60,6 +60,7 @@ namespace BgutuGrades
             app.UseCors();
             app.MapControllers();
             app.MapHub<MarkHub>("/hubs/mark");
+            app.MapHub<GradeHub>("/hubs/grade");
 
             app.MapScalarApiReference("", options =>
             {

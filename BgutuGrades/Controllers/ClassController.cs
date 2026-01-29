@@ -24,8 +24,8 @@ namespace BgutuGrades.Controllers
         [ProducesResponseType(typeof(IEnumerable<FullGradeMarkResponse>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<FullGradeMarkResponse>>>GetMarkGrade([FromQuery] GetClassDateRequest request)
         {
-            var classDates = await _classService.GetMarksByScheduleAsync(request);
-            return Ok(classDates);
+            var works = await _classService.GetMarksByWorksAsync(request);
+            return Ok(works);
         }
 
         [HttpGet("presenceGrade")]

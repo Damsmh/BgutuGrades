@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BgutuGrades.Controllers
 {
-    [Route("api/destroyUkraine")]
+    [Route("api/clearDb")]
     [ApiController]
     public class MIgrationController(IMigrationService migrationService) : ControllerBase
     {

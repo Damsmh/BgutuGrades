@@ -40,6 +40,11 @@ namespace BgutuGrades.Models.Mark
         public int WorkId { get; set; }
     }
 
+    public class UpdateMarkGradeRequest
+    {
+        [Required]
+        public int StudentId { get; set; }
+    }
     public class DeleteMarkByStudentAndWorkRequest
     {
         [Required]

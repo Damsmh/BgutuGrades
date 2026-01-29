@@ -9,8 +9,6 @@ namespace BgutuGrades.Models.Class
         public int DisciplineId { get; set; }
         [Required]
         public int GroupId { get; set; }
-        [Required]
-        public DateOnly EndDate { get; set; }
     }
 
     public class CreateClassRequest

@@ -29,6 +29,16 @@ namespace BgutuGrades.Models.Presence
         public int StudentId { get; set; }
     }
 
+    public class UpdatePresenceGradeRequest
+    {
+        [Required]
+        public int DisciplineId { get; set; }
+        [Required]
+        public int StudentId { get; set; }
+        [Required]
+        public int ClassId { get; set; }
+    }
+
     public class DeletePresenceByStudentAndDateRequest
     {
         [Required]
