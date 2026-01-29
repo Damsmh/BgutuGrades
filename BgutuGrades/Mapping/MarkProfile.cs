@@ -10,6 +10,7 @@ namespace BgutuGrades.Mapping
         {
             CreateMap<CreateMarkRequest, Mark>();
             CreateMap<UpdateMarkRequest, Mark>();
+            CreateMap<UpdateMarkRequest, MarkResponse>();
             CreateMap<Mark, MarkResponse>();
         }
     }

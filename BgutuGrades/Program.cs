@@ -1,5 +1,6 @@
 using BgutuGrades.Data;
 using BgutuGrades.Features;
+using BgutuGrades.Hubs;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi;
 using Scalar.AspNetCore;
@@ -59,6 +60,7 @@ namespace BgutuGrades
             app.UseAuthorization();
 
             app.MapControllers();
+            app.MapHub<MarkHub>("/hubs/mark");
 
             app.MapScalarApiReference("", options =>
             {

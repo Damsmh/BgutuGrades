@@ -15,16 +15,16 @@ namespace BgutuGrades.Controllers
         [ProducesResponseType(typeof(IEnumerable<MarkResponse>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<MarkResponse>>> GetMarks()
         {
-            var Marks = await _markService.GetAllMarksAsync();
-            return Ok(Marks);
+            var marks = await _markService.GetAllMarksAsync();
+            return Ok(marks);
         }
 
         [HttpPost]
         [ProducesResponseType(typeof(MarkResponse), StatusCodes.Status201Created)]
         public async Task<ActionResult<MarkResponse>> CreateMark([FromBody] CreateMarkRequest request)
         {
-            var Mark = await _markService.CreateMarkAsync(request);
-            return CreatedAtAction(nameof(GetMarkByDisciplineAndGroup), new { id = Mark.Id }, Mark);
+            var mark = await _markService.CreateMarkAsync(request);
+            return CreatedAtAction(nameof(GetMarkByDisciplineAndGroup), new { id = mark.Id }, mark);
         }
 
         [HttpGet("by_dId_gId")]
@@ -32,10 +32,10 @@ namespace BgutuGrades.Controllers
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<MarkResponse>> GetMarkByDisciplineAndGroup([FromQuery] GetMarksByDisciplineAndGroupRequest request)
         {
-            var Mark = await _markService.GetMarksByDisciplineAndGroupAsync(request);
-            if (Mark == null)
+            var marks = await _markService.GetMarksByDisciplineAndGroupAsync(request);
+            if (marks == null)
                 return NotFound(new {disciplineId = request.DisciplineId, groupId = request.GroupId});
-            return Ok(Mark);
+            return Ok(marks);
         }
 
         [HttpPut]
