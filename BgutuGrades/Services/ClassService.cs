@@ -81,6 +81,7 @@ namespace BgutuGrades.Services
                         {
                             Date = lessonDate,
                             ClassType = _class.Type,
+                            StartTime = _class.StartTime,
                             Id = _class.Id
                         });
                     }

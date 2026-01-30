@@ -20,6 +20,8 @@ namespace BgutuGrades.Models.Class
         [Required]
         public ClassType Type { get; set; }
         [Required]
+        public DateTime StartTime { get; set; }
+        [Required]
         public int DisciplineId { get; set; }
         [Required]
         public int GroupId { get; set; }
