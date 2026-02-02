@@ -93,6 +93,7 @@ namespace BgutuGrades.Hubs
                     Date = request.Date 
                 }] 
             };
+            await _dbContext.SaveChangesAsync();
             await Clients.All.SendAsync("UpdatedPresence", response);
         }
     }
