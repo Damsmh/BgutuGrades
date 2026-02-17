@@ -1,5 +1,6 @@
 ﻿using BgutuGrades.Models.Student;
 using BgutuGrades.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Scalar.AspNetCore;
 
@@ -21,6 +22,7 @@ namespace BgutuGrades.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = "Edit")]
         [ProducesResponseType(typeof(StudentResponse), StatusCodes.Status201Created)]
         public async Task<ActionResult<StudentResponse>> CreateStudent([FromBody] CreateStudentRequest request)
         {
@@ -52,6 +54,7 @@ namespace BgutuGrades.Controllers
         }
 
         [HttpDelete]
+        [Authorize(Policy = "Edit")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteStudent([FromQuery] DeleteStudentRequest request)

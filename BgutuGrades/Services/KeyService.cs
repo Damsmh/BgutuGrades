@@ -2,7 +2,6 @@
 using BgutuGrades.Entities;
 using BgutuGrades.Models.Key;
 using BgutuGrades.Repositories;
-using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
 
 namespace BgutuGrades.Services
@@ -20,11 +19,11 @@ namespace BgutuGrades.Services
         private readonly IMapper _mapper = mapper;
         public async Task<KeyResponse> GenerateKeyAsync(Role role)
         {
-            var newKey = RandomNumberGenerator.GetHexString(32, true);
+            var newKey = RandomNumberGenerator.GetHexString(64, true);
             var apiKey = new ApiKey
             {
                 Key = newKey,
-                OwnerName = "PukiKaki",
+                OwnerName = "bgitugrades",
                 Role = role.ToString(),
                 ExpiryDate = role == Role.STUDENT ? DateTime.UtcNow.AddDays(30) : null
             };
@@ -41,14 +40,14 @@ namespace BgutuGrades.Services
 
         public async Task<IEnumerable<KeyResponse>> GetKeysAsync()
         {
-            var storedKeys = _keyRepository.GetKeysAsync();
+            var storedKeys = await _keyRepository.GetKeysAsync();
             var response = _mapper.Map<IEnumerable<KeyResponse>>(storedKeys);
             return response;
         }
 
         public async Task<KeyResponse> GetKeyAsync(string key)
         {
-            var storedKey = _keyRepository.GetAsync(key);
+            var storedKey = await _keyRepository.GetAsync(key);
             var response = _mapper.Map<KeyResponse>(storedKey);
             return response;
         }

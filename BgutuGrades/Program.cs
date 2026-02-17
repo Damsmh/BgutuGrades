@@ -5,6 +5,8 @@ using BgutuGrades.Hubs;
 using BgutuGrades.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi;
+using Saunter;
+using Saunter.AsyncApiSchema.v2;
 using Scalar.AspNetCore;
 using System.Text.Json.Serialization;
 
@@ -47,10 +49,21 @@ namespace BgutuGrades
                     options.SuppressWWWAuthenticateHeader = false;
                     options.IgnoreAuthenticationIfAllowAnonymous = true;
                 });
+            builder.Services.AddAsyncApiSchemaGeneration(options =>
+            {
+                options.AssemblyMarkerTypes = [typeof(GradeHub)];
+                options.AsyncApi = new AsyncApiDocument
+                {
+                    Info = new Info("Student Grades Real-time API", "1.0.0")
+                    {
+                        Description = "Документация SignalR хаба для работы с оценками и посещаемостью"
+                    }
+                };
+            });
             builder.Services.AddAuthorizationBuilder()
-                .AddPolicy("ViewOnly", policy => policy.RequireRole("Student"))
-                .AddPolicy("Edit", policy => policy.RequireRole("Teacher", "Admin"))
-                .AddPolicy("Admin", policy => policy.RequireRole("Admin"));
+                .AddPolicy("ViewOnly", policy => policy.RequireRole("STUDENT"))
+                .AddPolicy("Edit", policy => policy.RequireRole("TEACHER", "ADMIN"))
+                .AddPolicy("Admin", policy => policy.RequireRole("ADMIN"));
             builder.Services.AddControllers()
                 .AddJsonOptions(options =>
                 {
@@ -72,6 +85,8 @@ namespace BgutuGrades
 
             app.UseSwagger();
             app.MapSwagger();
+            app.MapAsyncApiDocuments();
+            
             //app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseAuthorization();

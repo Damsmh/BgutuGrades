@@ -1,8 +1,8 @@
 ﻿using BgutuGrades.Models.Key;
 using BgutuGrades.Models.Student;
 using BgutuGrades.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 
 namespace BgutuGrades.Controllers
@@ -37,17 +37,17 @@ namespace BgutuGrades.Controllers
             return Ok(storedKey);
         }
 
-        [HttpPost("shared")]
-        [ProducesResponseType(typeof(KeyResponse), StatusCodes.Status201Created)]
+        [HttpGet("shared")]
+        [Authorize(Policy = "Edit")]
+        [ProducesResponseType(typeof(SharedKeyResponse), StatusCodes.Status200OK)]
         public async Task<ActionResult<KeyResponse>> CreateSharedKey()
         {
             var key = await _keyService.GenerateKeyAsync(Entities.Role.STUDENT);
             var response = new SharedKeyResponse
             {
-                Key = key.Key,
-                Link = $"{Request.Scheme}://{Request.Host}/api/grades?Key={key.Key}"
+                Link = $"{Request.Scheme}://{Request.Host}/visit?Key={key.Key}"
             };
-            return CreatedAtAction(nameof(GetKey), new { key = key.Key }, key);
+            return Ok(response);
         }
 
         [HttpDelete]

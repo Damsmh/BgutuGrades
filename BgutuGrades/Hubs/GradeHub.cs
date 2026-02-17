@@ -6,26 +6,37 @@ using BgutuGrades.Services;
 using Grades.Entities;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using Saunter.Attributes;
 
 namespace BgutuGrades.Hubs
 {
+    [AsyncApi]
     public class GradeHub(IClassService classService, AppDbContext dbContext) : Hub
     {
         private readonly IClassService _classService = classService;
         private readonly AppDbContext _dbContext = dbContext;
 
+        [Channel("hubs/grade/GetMarkGrade")]
+        [PublishOperation(typeof(GetClassDateRequest), Summary = "Запросить оценки по работам", OperationId = nameof(GetMarkGrade))]
+        [SubscribeOperation(typeof(IEnumerable<FullGradeMarkResponse>), Summary = "Событие: Получение списка оценок (ответ на GetMarkGrade)", OperationId = "ReceiveMarks")]
         public async Task GetMarkGrade(GetClassDateRequest request)
         {
             var marks = await _classService.GetMarksByWorksAsync(request);
             await Clients.Caller.SendAsync("ReceiveMarks", marks);
         }
 
+        [Channel("hubs/grade/GetPresenceGrade")]
+        [PublishOperation(typeof(GetClassDateRequest), Summary = "Запросить данные о посещаемости", OperationId = nameof(GetPresenceGrade))]
+        [SubscribeOperation(typeof(IEnumerable<FullGradePresenceResponse>), Summary = "Событие: Получение данных о посещаемости (ответ на GetPresenceGrade)", OperationId = "ReceivePresences")]
         public async Task GetPresenceGrade(GetClassDateRequest request)
         {
             var classDates = await _classService.GetPresenceByScheduleAsync(request);
             await Clients.Caller.SendAsync("ReceivePresences", classDates);
         }
 
+        [Channel("hubs/grade/UpdateMarkGrade")]
+        [PublishOperation(typeof(UpdateMarkGradeRequest), Summary = "Обновить или создать оценку", OperationId = nameof(UpdateMarkGrade))]
+        [SubscribeOperation(typeof(FullGradeMarkResponse), Summary = "Событие: Оценка обновлена (рассылается всем)", OperationId = "UpdatedMark")]
         public async Task UpdateMarkGrade(UpdateMarkGradeRequest request)
         {
             var existing = await _dbContext.Marks
@@ -62,6 +73,9 @@ namespace BgutuGrades.Hubs
             });
         }
 
+        [Channel("hubs/grade/UpdatePresenceGrade")]
+        [PublishOperation(typeof(UpdatePresenceGradeRequest), Summary = "Обновить или создать запись о посещаемости", OperationId = nameof(UpdatePresenceGrade))]
+        [SubscribeOperation(typeof(FullGradePresenceResponse), Summary = "Событие: Посещаемость обновлена (рассылается всем)", OperationId = "UpdatedPresence")]
         public async Task UpdatePresenceGrade(UpdatePresenceGradeRequest request)
         {
 

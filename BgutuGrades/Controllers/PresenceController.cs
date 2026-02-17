@@ -17,6 +17,7 @@ namespace BgutuGrades.Controllers
         private readonly AppDbContext _dbContext = dbContext;
 
         [HttpGet]
+
         [ProducesResponseType(typeof(IEnumerable<PresenceResponse>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<PresenceResponse>>> GetPresences()
         {
