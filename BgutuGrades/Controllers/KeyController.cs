@@ -1,4 +1,5 @@
-﻿using BgutuGrades.Models.Key;
+﻿using Asp.Versioning;
+using BgutuGrades.Models.Key;
 using BgutuGrades.Models.Student;
 using BgutuGrades.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -14,6 +15,7 @@ namespace BgutuGrades.Controllers
         private readonly IKeyService _keyService = keyService;
 
         [HttpGet]
+        [ApiVersion("2.0")]
         [ProducesResponseType(typeof(IEnumerable<KeyResponse>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<KeyResponse>>> GetKeys()
         {
@@ -22,6 +24,7 @@ namespace BgutuGrades.Controllers
         }
 
         [HttpPost]
+        [ApiVersion("2.0")]
         [ProducesResponseType(typeof(KeyResponse), StatusCodes.Status201Created)]
         public async Task<ActionResult<KeyResponse>> CreateKey(CreateKeyRequest request)
         {
@@ -30,6 +33,8 @@ namespace BgutuGrades.Controllers
         }
 
         [HttpGet("{key}")]
+        [ApiVersion("1.0")]
+        [Obsolete("deprecated")]
         [ProducesResponseType(typeof(KeyResponse), StatusCodes.Status201Created)]
         public async Task<ActionResult<KeyResponse>> GetKey([FromRoute] string key)
         {
@@ -39,18 +44,21 @@ namespace BgutuGrades.Controllers
 
         [HttpGet("shared")]
         [Authorize(Policy = "Edit")]
+        [ApiVersion("2.0")]
         [ProducesResponseType(typeof(SharedKeyResponse), StatusCodes.Status200OK)]
-        public async Task<ActionResult<KeyResponse>> CreateSharedKey()
+        public async Task<ActionResult<KeyResponse>> CreateSharedKey(int groupId, int disciplineId)
         {
             var key = await _keyService.GenerateKeyAsync(Entities.Role.STUDENT);
             var response = new SharedKeyResponse
             {
-                Link = $"{Request.Scheme}://{Request.Host}/visit?Key={key.Key}"
+                Link = $"{Request.Scheme}://{Request.Host}/visit?key={key.Key}"
             };
             return Ok(response);
         }
 
         [HttpDelete]
+        [Authorize(Policy = "Admin")]
+        [ApiVersion("2.0")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteKey([FromQuery] DeleteKeyRequest request)

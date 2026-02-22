@@ -1,5 +1,6 @@
-﻿using BgutuGrades.Models.Transfer;
+﻿using Asp.Versioning;
 using BgutuGrades.Models.Student;
+using BgutuGrades.Models.Transfer;
 using BgutuGrades.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,6 +13,7 @@ namespace BgutuGrades.Controllers
         private readonly ITransferService _transferService = TransferService;
 
         [HttpGet]
+        [ApiVersion("2.0")]
         [ProducesResponseType(typeof(IEnumerable<TransferResponse>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<TransferResponse>>> GetTransfers()
         {
@@ -20,6 +22,7 @@ namespace BgutuGrades.Controllers
         }
 
         [HttpPost]
+        [ApiVersion("2.0")]
         [ProducesResponseType(typeof(TransferResponse), StatusCodes.Status201Created)]
         public async Task<ActionResult<TransferResponse>> CreateTransfer([FromBody] CreateTransferRequest request)
         {
@@ -28,6 +31,7 @@ namespace BgutuGrades.Controllers
         }
 
         [HttpGet("{id}")]
+        [ApiVersion("2.0")]
         [ProducesResponseType(typeof(TransferResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<TransferResponse>> GetTransfer([FromRoute] int id)
@@ -39,6 +43,7 @@ namespace BgutuGrades.Controllers
         }
 
         [HttpPut]
+        [ApiVersion("2.0")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(UpdateTransferRequest), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateTransfer([FromBody] UpdateTransferRequest request)
@@ -51,6 +56,7 @@ namespace BgutuGrades.Controllers
         }
 
         [HttpDelete]
+        [ApiVersion("2.0")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteTransfer([FromQuery] int id)

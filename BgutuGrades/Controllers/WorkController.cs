@@ -1,11 +1,15 @@
-﻿using BgutuGrades.Models.Student;
+﻿using Asp.Versioning;
+using BgutuGrades.Models.Student;
 using BgutuGrades.Models.Work;
 using BgutuGrades.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel;
 
 namespace BgutuGrades.Controllers
 {
     [Route("api/work")]
+    [ApiVersion("1.0")]
+    [Obsolete("deprecated")]
     [ApiController]
     public class WorkController(IWorkService WorkService) : ControllerBase
     {

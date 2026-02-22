@@ -1,8 +1,8 @@
-﻿using BgutuGrades.Models.Student;
+﻿using Asp.Versioning;
+using BgutuGrades.Models.Student;
 using BgutuGrades.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Scalar.AspNetCore;
 
 
 namespace BgutuGrades.Controllers
@@ -13,7 +13,8 @@ namespace BgutuGrades.Controllers
     {
         private readonly IStudentService _studentService = studentService;
 
-        [HttpGet("by_gId")]
+        [HttpGet()]
+        [ApiVersion("2.0")]
         [ProducesResponseType(typeof(IEnumerable<StudentResponse>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<StudentResponse>>> GetStudents([FromQuery] GetStudentsByGroupRequest request)
         {
@@ -23,6 +24,7 @@ namespace BgutuGrades.Controllers
 
         [HttpPost]
         [Authorize(Policy = "Edit")]
+        [ApiVersion("2.0")]
         [ProducesResponseType(typeof(StudentResponse), StatusCodes.Status201Created)]
         public async Task<ActionResult<StudentResponse>> CreateStudent([FromBody] CreateStudentRequest request)
         {
@@ -31,6 +33,8 @@ namespace BgutuGrades.Controllers
         }
 
         [HttpGet("{id}")]
+        [ApiVersion("1.0")]
+        [Obsolete("deprecated")]
         [ProducesResponseType(typeof(StudentResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<StudentResponse>> GetStudent([FromRoute] int id)
@@ -42,6 +46,7 @@ namespace BgutuGrades.Controllers
         }
 
         [HttpPut]
+        [ApiVersion("2.0")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateStudent([FromBody] UpdateStudentRequest request)
@@ -54,6 +59,7 @@ namespace BgutuGrades.Controllers
         }
 
         [HttpDelete]
+        [ApiVersion("2.0")]
         [Authorize(Policy = "Edit")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]

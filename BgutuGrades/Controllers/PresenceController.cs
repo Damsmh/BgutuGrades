@@ -1,4 +1,5 @@
-﻿using BgutuGrades.Data;
+﻿using Asp.Versioning;
+using BgutuGrades.Data;
 using BgutuGrades.Models.Class;
 using BgutuGrades.Models.Presence;
 using BgutuGrades.Models.Student;
@@ -6,9 +7,13 @@ using BgutuGrades.Services;
 using Grades.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel;
 
 namespace BgutuGrades.Controllers
 {
+    [ApiVersion("1.0")]
+    [Obsolete("deprecated")]
+    [Description("Используйте SignalR")]
     [Route("api/presence")]
     [ApiController]
     public class PresenceController(IPresenceService PresenceService, AppDbContext dbContext) : ControllerBase

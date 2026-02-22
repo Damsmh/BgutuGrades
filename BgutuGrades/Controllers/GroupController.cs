@@ -1,4 +1,5 @@
-﻿using BgutuGrades.Models.Group;
+﻿using Asp.Versioning;
+using BgutuGrades.Models.Group;
 using BgutuGrades.Models.Student;
 using BgutuGrades.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -12,6 +13,7 @@ namespace BgutuGrades.Controllers
         private readonly IGroupService _groupService = groupService;
 
         [HttpGet]
+        [ApiVersion("2.0")]
         [ProducesResponseType(typeof(IEnumerable<GroupResponse>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<GroupResponse>>> GetGroups(
             [FromQuery] GetGroupsByDisciplineRequest request)
@@ -21,6 +23,7 @@ namespace BgutuGrades.Controllers
         }
 
         [HttpGet("all")]
+        [ApiVersion("2.0")]
         [ProducesResponseType(typeof(IEnumerable<GroupResponse>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<GroupResponse>>> GetAllGroups()
         {
@@ -29,6 +32,7 @@ namespace BgutuGrades.Controllers
         }
 
         [HttpPost]
+        [ApiVersion("2.0")]
         [ProducesResponseType(typeof(GroupResponse), StatusCodes.Status201Created)]
         public async Task<ActionResult<GroupResponse>> CreateGroup([FromBody] CreateGroupRequest request)
         {
@@ -37,6 +41,8 @@ namespace BgutuGrades.Controllers
         }
 
         [HttpGet("{id}")]
+        [ApiVersion("1.0")]
+        [Obsolete("deprecated")]
         [ProducesResponseType(typeof(GroupResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<GroupResponse>> GetGroup([FromRoute] int id)
@@ -48,6 +54,8 @@ namespace BgutuGrades.Controllers
         }
 
         [HttpPut]
+        [ApiVersion("1.0")]
+        [Obsolete("deprecated")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(UpdateGroupRequest), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateGroup([FromBody] UpdateGroupRequest request)
@@ -60,6 +68,7 @@ namespace BgutuGrades.Controllers
         }
 
         [HttpDelete]
+        [ApiVersion("2.0")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteGroup([FromQuery] DeleteGroupRequest request)

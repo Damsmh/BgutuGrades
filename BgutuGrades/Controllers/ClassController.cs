@@ -1,4 +1,5 @@
-﻿using BgutuGrades.Models.Class;
+﻿using Asp.Versioning;
+using BgutuGrades.Models.Class;
 using BgutuGrades.Models.Student;
 using BgutuGrades.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -12,6 +13,9 @@ namespace BgutuGrades.Controllers
         private readonly IClassService _classService = ClassService;
 
         [HttpGet]
+        [ApiVersion("1.0")]
+        [Obsolete("deprecated")]
+        [EndpointDescription("Больше не используется, т.к. произведён полный переход на SignalR")]
         [ProducesResponseType(typeof(IEnumerable<ClassDateResponse>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<ClassDateResponse>>> GetClasssDates([FromBody] GetClassDateRequest request)
         {
@@ -20,6 +24,9 @@ namespace BgutuGrades.Controllers
         }
 
         [HttpGet("markGrade")]
+        [ApiVersion("1.0")]
+        [Obsolete("deprecated")]
+        [EndpointDescription("Больше не используется, т.к. произведён полный переход на SignalR")]
         [ProducesResponseType(typeof(IEnumerable<FullGradeMarkResponse>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<FullGradeMarkResponse>>>GetMarkGrade([FromQuery] GetClassDateRequest request)
         {
@@ -28,6 +35,9 @@ namespace BgutuGrades.Controllers
         }
 
         [HttpGet("presenceGrade")]
+        [ApiVersion("1.0")]
+        [Obsolete("deprecated")]
+        [EndpointDescription("Больше не используется, т.к. произведён полный переход на SignalR")]
         [ProducesResponseType(typeof(IEnumerable<FullGradePresenceResponse>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<FullGradePresenceResponse>>> GetPresenceGrade([FromQuery] GetClassDateRequest request)
         {
@@ -36,6 +46,7 @@ namespace BgutuGrades.Controllers
         }
 
         [HttpPost]
+        [ApiVersion("2.0")]
         [ProducesResponseType(typeof(ClassResponse), StatusCodes.Status201Created)]
         public async Task<ActionResult<ClassResponse>> CreateClass([FromBody] CreateClassRequest request)
         {
@@ -44,6 +55,8 @@ namespace BgutuGrades.Controllers
         }
 
         [HttpGet("{id}")]
+        [ApiVersion("1.0")]
+        [Obsolete("deprecated")]
         [ProducesResponseType(typeof(ClassResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<ClassResponse>> GetClass([FromRoute] int id)
@@ -55,6 +68,7 @@ namespace BgutuGrades.Controllers
         }
 
         [HttpDelete]
+        [ApiVersion("2.0")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteClass([FromQuery] int id)

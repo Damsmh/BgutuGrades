@@ -1,6 +1,6 @@
-﻿using BgutuGrades.Data;
+﻿using Asp.Versioning;
+using BgutuGrades.Data;
 using BgutuGrades.Models.Mark;
-using BgutuGrades.Models.Presence;
 using BgutuGrades.Models.Student;
 using BgutuGrades.Services;
 using Grades.Entities;
@@ -17,6 +17,8 @@ namespace BgutuGrades.Controllers
         private readonly AppDbContext _dbContext = dbContext;
 
         [HttpGet]
+        [ApiVersion("1.0")]
+        [Obsolete("deprecated")]
         [ProducesResponseType(typeof(IEnumerable<MarkResponse>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<MarkResponse>>> GetMarks()
         {
@@ -25,6 +27,8 @@ namespace BgutuGrades.Controllers
         }
 
         [HttpPost]
+        [ApiVersion("1.0")]
+        [Obsolete("deprecated")]
         [ProducesResponseType(typeof(MarkResponse), StatusCodes.Status201Created)]
         public async Task<ActionResult<MarkResponse>> CreateMark([FromBody] CreateMarkRequest request)
         {
@@ -33,6 +37,8 @@ namespace BgutuGrades.Controllers
         }
 
         [HttpGet("by_dId_gId")]
+        [ApiVersion("1.0")]
+        [Obsolete("deprecated")]
         [ProducesResponseType(typeof(MarkResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<MarkResponse>> GetMarkByDisciplineAndGroup([FromQuery] GetMarksByDisciplineAndGroupRequest request)
@@ -44,6 +50,8 @@ namespace BgutuGrades.Controllers
         }
 
         [HttpPut]
+        [ApiVersion("1.0")]
+        [Obsolete("deprecated")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateMark([FromBody] UpdateMarkRequest request)
@@ -56,6 +64,8 @@ namespace BgutuGrades.Controllers
         }
 
         [HttpPut("grade")]
+        [ApiVersion("1.0")]
+        [Obsolete("deprecated")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<ActionResult<GradeMarkResponse>> UpdateMarkGrade([FromQuery] UpdateMarkGradeRequest request, [FromBody] UpdateMarkRequest mark)
         {
@@ -87,6 +97,8 @@ namespace BgutuGrades.Controllers
         }
 
         [HttpDelete]
+        [ApiVersion("1.0")]
+        [Obsolete("deprecated")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteMark([FromQuery] DeleteMarkByStudentAndWorkRequest request)

@@ -1,5 +1,6 @@
-﻿using BgutuGrades.Models.Student;
+﻿using Asp.Versioning;
 using BgutuGrades.Models.Discipline;
+using BgutuGrades.Models.Student;
 using BgutuGrades.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,6 +13,7 @@ namespace BgutuGrades.Controllers
         private readonly IDisciplineService _disciplineService = DisciplineService;
 
         [HttpGet("all")]
+        [ApiVersion("2.0")]
         [ProducesResponseType(typeof(IEnumerable<DisciplineResponse>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<DisciplineResponse>>> GetDisciplines()
         {
@@ -20,6 +22,7 @@ namespace BgutuGrades.Controllers
         }
 
         [HttpGet]
+        [ApiVersion("2.0")]
         [ProducesResponseType(typeof(IEnumerable<DisciplineResponse>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<DisciplineResponse>>> GetDisciplinesByGroupId([FromQuery] int groupId)
         {
@@ -28,6 +31,7 @@ namespace BgutuGrades.Controllers
         }
 
         [HttpPost]
+        [ApiVersion("2.0")]
         [ProducesResponseType(typeof(DisciplineResponse), StatusCodes.Status201Created)]
         public async Task<ActionResult<DisciplineResponse>> CreateDiscipline([FromBody] CreateDisciplineRequest request)
         {
@@ -36,6 +40,8 @@ namespace BgutuGrades.Controllers
         }
 
         [HttpGet("{id}")]
+        [ApiVersion("1.0")]
+        [Obsolete("deprecated")]
         [ProducesResponseType(typeof(DisciplineResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<DisciplineResponse>> GetDiscipline([FromRoute] int id)
@@ -47,6 +53,8 @@ namespace BgutuGrades.Controllers
         }
 
         [HttpPut]
+        [ApiVersion("1.0")]
+        [Obsolete("deprecated")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateDiscipline([FromBody] UpdateDisciplineRequest request)
@@ -59,6 +67,7 @@ namespace BgutuGrades.Controllers
         }
 
         [HttpDelete]
+        [ApiVersion("2.0")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteDiscipline([FromQuery] DeleteDisciplineRequest request)
