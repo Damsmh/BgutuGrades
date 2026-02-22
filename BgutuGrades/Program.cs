@@ -121,22 +121,19 @@ namespace BgutuGrades
 
             var provider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
 
-            if (app.Environment.IsDevelopment())
+            app.UseSwagger();
+            app.UseSwaggerUI(options =>
             {
-                app.UseSwagger();
-                app.UseSwaggerUI(options =>
+                foreach (var description in provider.ApiVersionDescriptions)
                 {
-                    foreach (var description in provider.ApiVersionDescriptions)
-                    {
-                        options.SwaggerEndpoint(
-                            $"/swagger/{description.GroupName}/swagger.json",
-                            $"BGITU.GRADES API {description.GroupName} {(description.IsDeprecated ? "(deprecated)" : "")}"
-                        );
-                    }
+                    options.SwaggerEndpoint(
+                        $"/swagger/{description.GroupName}/swagger.json",
+                        $"BGITU.GRADES API {description.GroupName} {(description.IsDeprecated ? "(deprecated)" : "")}"
+                    );
+                }
 
-                    options.RoutePrefix = "";
-                });
-            }
+                options.RoutePrefix = "";
+            });
 
             app.MapAsyncApiDocuments();
             app.UseAuthentication();
