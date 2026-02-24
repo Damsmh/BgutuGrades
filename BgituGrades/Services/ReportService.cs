@@ -88,7 +88,7 @@ namespace BgituGrades.Services
             _cache.Set($"report_{reportId}", excelBytes, cacheEntryOptions);
 
             await _hubContext.Clients.Group(reportId.ToString())
-                .SendAsync("ReportReady", reportId.ToString(), $"/api/report/{reportId}/download");
+                .SendAsync("ReportReady", reportId.ToString(), $"https://maxim.pamagiti.site/api/report/{reportId}/download");
         }
 
         private static async Task<byte[]> GenerateMarksExcelAsync(IMarkRepository _markRepository, IEnumerable<Group> groups, IEnumerable<Discipline> disciplines, IEnumerable<Student> students)

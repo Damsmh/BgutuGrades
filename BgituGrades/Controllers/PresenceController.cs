@@ -11,8 +11,7 @@ using System.ComponentModel;
 
 namespace BgituGrades.Controllers
 {
-    [ApiVersion("1.0")]
-    [Obsolete("deprecated")]
+    [ApiVersion("2.0")]
     [Description("Используйте SignalR")]
     [Route("api/presence")]
     [ApiController]
