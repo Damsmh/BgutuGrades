@@ -1,6 +1,7 @@
 ﻿using BgituGrades.Data;
 using BgituGrades.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Text.RegularExpressions;
 
 namespace BgituGrades.Repositories
 {
@@ -14,6 +15,7 @@ namespace BgituGrades.Repositories
         Task<Mark?> GetMarkByStudentAndWorkAsync(int studentId, int workId);
         Task DeleteAllAsync();
         Task<double> GetAverageMarkByStudentAndDisciplineAsync(int studentId, int disciplineId);
+        Task<IEnumerable<Mark>> GetMarksByDisciplinesAndGroupsAsync(List<int> disciplinesIds, List<int> groupsIds);
     }
 
     public class MarkRepository(IDbContextFactory<AppDbContext> contextFactory) : IMarkRepository
@@ -95,6 +97,17 @@ namespace BgituGrades.Repositories
                 .ToList();
 
             return validMarks.Count != 0 ? validMarks.Average() : 0;
+        }
+
+        public async Task<IEnumerable<Mark>> GetMarksByDisciplinesAndGroupsAsync(List<int> disciplineIds, List<int> groupIds)
+        {
+            using var context = await contextFactory.CreateDbContextAsync();
+            var entities = await context.Marks
+                .Where(m => disciplineIds.Contains(m.Work.DisciplineId) &&
+                           groupIds.Contains(m.Student.GroupId))
+                .AsNoTracking()
+                .ToListAsync();
+            return entities;
         }
     }
 

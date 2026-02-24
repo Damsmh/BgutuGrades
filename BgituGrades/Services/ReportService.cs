@@ -96,13 +96,16 @@ namespace BgituGrades.Services
             using var package = new ExcelPackage();
             var worksheet = package.Workbook.Worksheets.Add("Отчёт успеваемости");
 
+            var disciplineIds = disciplines.Select(d => d.Id).ToList();
+            var groupIds = groups.Select(g => g.Id).ToList();
+
             Dictionary<(int StudentId, int DisciplineId), double> markDict = new();
 
             try
             {
                 if (disciplines.Any() && groups.Any())
                 {
-                    var allMarks = await _markRepository.GetMarksByDisciplineAndGroupAsync(disciplines.First().Id, groups.First().Id);
+                    var allMarks = await _markRepository.GetMarksByDisciplinesAndGroupsAsync(disciplineIds, groupIds);
                     markDict = allMarks
                         .Where(m => double.TryParse(m.Value, out _))
                         .GroupBy(m => new { m.StudentId, m.Work.DisciplineId })
@@ -161,15 +164,17 @@ namespace BgituGrades.Services
             using var package = new ExcelPackage();
             var worksheet = package.Workbook.Worksheets.Add("Отчёт посещаемости");
 
+            var disciplineIds = disciplines.Select(d => d.Id).ToList();
+            var groupIds = groups.Select(g => g.Id).ToList();
+
+
             Dictionary<(int StudentId, int DisciplineId), (int Present, int Total)> presenceDict = new();
 
             try
             {
                 if (disciplines.Any() && groups.Any())
                 {
-                    var allPresences = await _presenceRepository.GetPresencesByDisciplineAndGroupAsync(
-                        disciplines.First().Id,
-                        groups.First().Id);
+                    var allPresences = await _presenceRepository.GetPresencesByDisciplinesAndGroupsAsync(groupIds, disciplineIds);
 
                     presenceDict = allPresences
                         .GroupBy(m => new { m.StudentId, m.DisciplineId })
@@ -222,7 +227,7 @@ namespace BgituGrades.Services
                         }
                         else
                         {
-                            worksheet.Cells[row, i + 2].Value = "-";
+                            worksheet.Cells[row, i + 2].Value = "0/0";
                         }
                     }
                     row++;

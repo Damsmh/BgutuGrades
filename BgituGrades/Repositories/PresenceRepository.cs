@@ -1,6 +1,7 @@
 ﻿using BgituGrades.Data;
 using BgituGrades.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Text.RegularExpressions;
 
 namespace BgituGrades.Repositories
 {
@@ -9,6 +10,7 @@ namespace BgituGrades.Repositories
         Task<IEnumerable<Presence>> GetAllPresencesAsync();
         Task<Presence> CreatePresenceAsync(Presence entity);
         Task<IEnumerable<Presence>> GetPresencesByDisciplineAndGroupAsync(int disciplineId, int groupId);
+        Task<IEnumerable<Presence>> GetPresencesByDisciplinesAndGroupsAsync(List<int> disciplineIds, List<int> groupIds);
         Task<Presence?> GetAsync(int disciplineId, int studentId, DateOnly date);
         Task<bool> DeletePresenceByStudentAndDateAsync(int studentId, DateOnly date);
         Task<bool> UpdatePresenceAsync(Presence entity);
@@ -73,6 +75,16 @@ namespace BgituGrades.Repositories
                                          p.StudentId == studentId &&
                                          p.Date == date);
             return presence;
+        }
+
+        public async Task<IEnumerable<Presence>> GetPresencesByDisciplinesAndGroupsAsync(List<int> disciplineIds, List<int> groupIds)
+        {
+            var entities = await _dbContext.Presences
+                .Where(p => disciplineIds.Contains(p.DisciplineId) &&
+                           groupIds.Contains(p.Student.GroupId))
+                .AsNoTracking()
+                .ToListAsync();
+            return entities;
         }
     }
 }
