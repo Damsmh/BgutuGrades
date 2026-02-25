@@ -3,13 +3,13 @@ using BgituGrades.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
+using System.ComponentModel.DataAnnotations;
 
 namespace BgituGrades.Controllers
 {
     [ApiController]
     [Route("api/report")]
     public class ReportController(
-        IReportService reportService,
         IDistributedCache cache,
         ILogger<ReportController> logger) : ControllerBase
     {

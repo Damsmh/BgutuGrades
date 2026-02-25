@@ -4,6 +4,7 @@ using BgituGrades.Models.Class;
 using BgituGrades.Models.Mark;
 using BgituGrades.Models.Presence;
 using Microsoft.EntityFrameworkCore;
+using System.Text.RegularExpressions;
 
 namespace BgituGrades.Repositories
 {
@@ -11,6 +12,7 @@ namespace BgituGrades.Repositories
     {
         Task<IEnumerable<Student>> GetAllStudentsAsync();
         Task<IEnumerable<Student>> GetStudentsByGroupAsync(int groupId);
+        Task<IEnumerable<Student>> GetStudentsByGroupIdsAsync(int[] groupIds);
         Task<IEnumerable<FullGradeMarkResponse>> GetMarksGrade(IEnumerable<Work> works, int groupId, int disciplineId);
         Task<IEnumerable<FullGradePresenceResponse>> GetPresenseGrade(IEnumerable<ClassDateResponse> scheduleDates, int groupId, int disciplineId);
         Task<Student> CreateStudentAsync(Student entity);
@@ -144,6 +146,16 @@ namespace BgituGrades.Repositories
                 .AsNoTracking()
                 .Where(s => studentIds.Contains(s.Id))
                 .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Student>> GetStudentsByGroupIdsAsync(int[] groupIds)
+        {
+            using var context = await contextFactory.CreateDbContextAsync();
+            var entities = await context.Students
+                .AsNoTracking()
+                .Where(s =>  groupIds.Contains(s.GroupId))
+                .ToListAsync();
+            return entities;
         }
     }
 }

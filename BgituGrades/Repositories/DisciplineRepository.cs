@@ -2,6 +2,7 @@
 using BgituGrades.Entities;
 using BgituGrades.Models.Discipline;
 using Microsoft.EntityFrameworkCore;
+using System.Text.RegularExpressions;
 
 namespace BgituGrades.Repositories
 {
@@ -10,6 +11,7 @@ namespace BgituGrades.Repositories
         Task<Discipline> CreateDisciplineAsync(Discipline entity);
         Task<Discipline?> GetByIdAsync(int id);
         Task<IEnumerable<Discipline?>> GetByGroupIdAsync(int groupId);
+        Task<IEnumerable<Discipline?>> GetByGroupIdsAsync(int[] groupIds);
         Task<bool> UpdateDisciplineAsync(Discipline entity);
         Task<bool> DeleteDisciplineAsync(int id);
         Task DeleteAllAsync();
@@ -52,6 +54,16 @@ namespace BgituGrades.Repositories
             using var context = await contextFactory.CreateDbContextAsync();
             return await context.Disciplines
                 .Where(d => d.Classes!.Any(c => c.GroupId == groupId))
+                .AsNoTracking()
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Discipline?>> GetByGroupIdsAsync(int[] groupIds)
+        {
+            using var context = await contextFactory.CreateDbContextAsync();
+            return await context.Disciplines
+                .Where(d => d.Classes!.Any(c => groupIds.Contains(c.GroupId)))
+                .DistinctBy(d => d.Id)
                 .AsNoTracking()
                 .ToListAsync();
         }

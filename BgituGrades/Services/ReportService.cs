@@ -5,6 +5,7 @@ using BgituGrades.Repositories;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Caching.Distributed;
 using OfficeOpenXml;
+using System.Diagnostics.Eventing.Reader;
 
 namespace BgituGrades.Services
 {
@@ -50,9 +51,23 @@ namespace BgituGrades.Services
                 await _hubContext.Clients.Group(reportId.ToString())
                     .SendAsync("ReportProgress", 10, "Загрузка данных...");
 
+
                 var groups = await groupRepo.GetGroupsByIdsAsync(request.GroupIds);
-                var disciplines = await disciplineRepo.GetDisciplinesByIdsAsync(request.DisciplineIds);
-                var students = await studentRepo.GetStudentsByIdsAsync(request.StudentIds);
+                IEnumerable<Discipline> disciplines;
+                if (request.DisciplineIds !=  null)
+                {
+                    disciplines = await disciplineRepo.GetDisciplinesByIdsAsync(request.DisciplineIds);
+                } else
+                {
+                    disciplines = await disciplineRepo.GetByGroupIdsAsync(request.GroupIds);
+                }
+
+                IEnumerable<Student> students;
+                if (request.StudentIds != null) {
+                    students = await studentRepo.GetStudentsByIdsAsync(request.StudentIds);
+                } else {
+                    students = await studentRepo.GetStudentsByGroupIdsAsync(request.GroupIds);
+                }
 
                 if (!groups.Any() || !disciplines.Any())
                 {
