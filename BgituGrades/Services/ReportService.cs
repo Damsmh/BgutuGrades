@@ -49,7 +49,7 @@ namespace BgituGrades.Services
             try
             {
                 await _hubContext.Clients.Group(reportId.ToString())
-                    .SendAsync("ReportProgress", 10, "Загрузка данных...");
+                    .SendAsync("ReportProgress", reportId.ToString(), 10, "Загрузка данных...");
 
 
                 var groups = await groupRepo.GetGroupsByIdsAsync(request.GroupIds);
@@ -75,7 +75,7 @@ namespace BgituGrades.Services
                 }
 
                 await _hubContext.Clients.Group(reportId.ToString())
-                    .SendAsync("ReportProgress", 40, "Генерация Excel файла...");
+                    .SendAsync("ReportProgress", reportId.ToString(), 40, "Генерация Excel файла...");
 
                 byte[] excelBytes;
                 if (request.ReportType == ReportType.MARK)
@@ -88,12 +88,12 @@ namespace BgituGrades.Services
                 }
 
                 await _hubContext.Clients.Group(reportId.ToString())
-                    .SendAsync("ReportProgress", 80, "Сохранение...");
+                    .SendAsync("ReportProgress", reportId.ToString(), 80, "Сохранение...");
 
                 await _cache.SetAsync($"report_{reportId}", excelBytes, cacheOptions);
 
                 await _hubContext.Clients.Group(reportId.ToString())
-                    .SendAsync("ReportReady", $"https://maxim.pamagiti.site/api/report/{reportId}/download");
+                    .SendAsync("ReportReady", reportId.ToString(), $"https://maxim.pamagiti.site/api/report/{reportId}/download");
             }
             catch (Exception ex)
             {
