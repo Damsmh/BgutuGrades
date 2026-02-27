@@ -195,7 +195,7 @@ namespace BgituGrades.Services
                 }
             }
 
-            worksheet.Cells.AutoFitColumns(10, 40);
+            worksheet.Cells[1, 1, currentRow - 1, maxCols + 1].AutoFitColumns();
             var fullRange = worksheet.Cells[1, 1, currentRow - 1, maxCols + 1];
             fullRange.Style.Border.Top.Style = fullRange.Style.Border.Bottom.Style =
             fullRange.Style.Border.Left.Style = fullRange.Style.Border.Right.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
@@ -289,7 +289,7 @@ namespace BgituGrades.Services
                 }
             }
 
-            worksheet.Cells.AutoFitColumns(10, 40);
+            worksheet.Cells[1, 1, currentRow - 1, maxCols + 1].AutoFitColumns();
             var borderRange = worksheet.Cells[1, 1, currentRow - 1, maxCols + 1];
             borderRange.Style.Border.Top.Style = borderRange.Style.Border.Bottom.Style =
             borderRange.Style.Border.Left.Style = borderRange.Style.Border.Right.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
