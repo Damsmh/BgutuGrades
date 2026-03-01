@@ -37,7 +37,11 @@ namespace BgituGrades.Repositories
         {
             using var context = await contextFactory.CreateDbContextAsync();
             var entity = await GetByIdAsync(id);
+            if (entity == null) {
+                return false;
+            }
             context.Groups.Remove(entity);
+            await context.SaveChangesAsync();
             return true;
         }
 
